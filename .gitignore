@@ -28,3 +28,4 @@ next-env.d.ts
 
 /test-gemini.js
 /ENV_SETUP.md
+.vercel
