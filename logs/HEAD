@@ -1,0 +1,10 @@
+0000000000000000000000000000000000000000 de4ced6979733b28a82d1bcb95d0738f96b391b5 Abhinandan Sah <abhinandansah222@gmail.com> 1753734023 +0530	commit (initial): first commit
+de4ced6979733b28a82d1bcb95d0738f96b391b5 0000000000000000000000000000000000000000 Abhinandan Sah <abhinandansah222@gmail.com> 1753734024 +0530	Branch: renamed refs/heads/master to refs/heads/main
+0000000000000000000000000000000000000000 de4ced6979733b28a82d1bcb95d0738f96b391b5 Abhinandan Sah <abhinandansah222@gmail.com> 1753734024 +0530	Branch: renamed refs/heads/master to refs/heads/main
+de4ced6979733b28a82d1bcb95d0738f96b391b5 0000000000000000000000000000000000000000 Abhinandan Sah <abhinandansah222@gmail.com> 1753734034 +0530	Branch: renamed refs/heads/main to refs/heads/main
+de4ced6979733b28a82d1bcb95d0738f96b391b5 de4ced6979733b28a82d1bcb95d0738f96b391b5 Abhinandan Sah <abhinandansah222@gmail.com> 1753734034 +0530	Branch: renamed refs/heads/main to refs/heads/main
+de4ced6979733b28a82d1bcb95d0738f96b391b5 b24d65ef746f8298e1020067755bf71214879c27 Abhinandan Sah <abhinandansah222@gmail.com> 1753734054 +0530	commit: uploaded all file
+b24d65ef746f8298e1020067755bf71214879c27 9fb7da1a019bf6480d7cf6f5588fc0d32e6be43c Abhinandan Sah <abhinandansah222@gmail.com> 1753734434 +0530	commit: up
+9fb7da1a019bf6480d7cf6f5588fc0d32e6be43c 3d996990226aa5b3ddd6319494786c2d04a475e2 Abhinandan Sah <abhinandansah222@gmail.com> 1753784084 +0530	commit: Add better error logging to chat API
+3d996990226aa5b3ddd6319494786c2d04a475e2 3df143c8448faf029eb102a1adaa90b5492b965d Abhinandan Sah <abhinandansah222@gmail.com> 1753784562 +0530	commit: Add retry logic and better error handling for Gemini API 503 errors
+3df143c8448faf029eb102a1adaa90b5492b965d 32782a04bb0140f32939a7aeaed8030c0e33e389 Abhinandan Sah <abhinandansah222@gmail.com> 1753814152 +0530	commit: Fix Gemini API model name from gemini-pro to gemini-1.5-flash
