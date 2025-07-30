@@ -73,6 +73,19 @@ export default function HomePage() {
           </motion.div>
 
           <div className="flex items-center gap-4">
+            <Button variant="ghost" asChild>
+              <Link href="/auth/login">
+                Sign In
+              </Link>
+            </Button>
+            <Button 
+              className="bg-gradient-to-r from-violet-600 to-emerald-600 hover:from-violet-700 hover:to-emerald-700 text-white"
+              asChild
+            >
+              <Link href="/auth/signup">
+                Sign Up
+              </Link>
+            </Button>
             <ThemeToggle />
             <Button variant="ghost" size="icon" asChild>
               <Link href="https://github.com" target="_blank">
@@ -198,7 +211,7 @@ export default function HomePage() {
                 className="bg-gradient-to-r from-violet-600 to-emerald-600 hover:from-violet-700 hover:to-emerald-700 text-white px-8 py-6 text-lg"
                 asChild
               >
-                <Link href="/dashboard">
+                <Link href="/auth/login">
                   Get Started Free
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Link>

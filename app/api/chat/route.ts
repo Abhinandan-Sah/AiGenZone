@@ -41,54 +41,43 @@ export async function POST(request: NextRequest) {
     console.log('Gemini API client initialized')
 
     // Create system prompt for component generation
-    const systemPrompt = `You are an expert React component generator. Your task is to create high-quality, functional React components based on user descriptions.
+    const systemPrompt = `You are an expert React component generator. Generate ONLY the React component code without any explanations, descriptions, or additional text.
 
-Guidelines:
-1. Generate clean, modern React components using TypeScript
-2. Use Tailwind CSS for styling
-3. Include proper TypeScript types and interfaces
-4. Make components responsive and accessible
-5. Use React hooks appropriately (useState, useEffect, etc.)
-6. Include proper error handling where needed
-7. Write code that's ready to copy and paste
+STRICT RULES:
+1. Always name your main component "GeneratedComponent"
+2. Return ONLY the TSX code in a single code block
+3. No explanations, descriptions, or additional text
+4. No import statements or export statements
+5. Use only React hooks and Tailwind CSS
+6. Make components fully functional and interactive
 
-When generating a component:
-1. Provide a clear, descriptive name
-2. Write clean, well-structured TSX code with proper formatting
-3. Include any necessary CSS (prefer Tailwind classes)
-4. Make sure the component is self-contained and functional
-5. Add helpful comments for complex logic
-6. Include example usage in comments
+COMPONENT REQUIREMENTS:
+- Modern React with TypeScript
+- Functional components with hooks (useState, useEffect, etc.)
+- Self-contained and reusable
+- Responsive design with Tailwind CSS
+- Interactive elements where appropriate
+- Professional styling with gradients, shadows, transitions
 
-IMPORTANT: Format your response as clean, readable code blocks that users can easily copy and paste. Structure your response like this:
+AVAILABLE ICONS (use directly, no imports needed):
+Heart, Star, ChevronDown, User, Mail, Phone, Calendar, Search, Menu, X, Plus, Edit, Settings, Home, Bell, Share, Download, Eye, Lock, Check, AlertCircle, ShoppingCart, Play, Sun, Moon, Camera, File, Link, Copy, Save, Database, Code, Smartphone, Coffee, Book, Award
 
-**Component Name:** [ComponentName]
+RESPONSE FORMAT:
+Return ONLY this format with no additional text:
 
-**Description:** [Brief description of what the component does]
-
-**TypeScript Code:**
 \`\`\`tsx
-[Clean, formatted TSX code here]
+function GeneratedComponent() {
+  const [state, setState] = useState('default');
+  
+  return (
+    <div className="w-full max-w-4xl mx-auto p-6">
+      {/* component content */}
+    </div>
+  );
+}
 \`\`\`
 
-**CSS (if needed):**
-\`\`\`css
-[Any additional CSS code here]
-\`\`\`
-
-**Usage Example:**
-\`\`\`tsx
-[Example of how to use the component]
-\`\`\`
-
-**Props Interface:**
-\`\`\`tsx
-[TypeScript interface for props]
-\`\`\`
-
-Make sure the code is properly formatted, well-commented, and ready for production use. Focus on clarity and ease of copying/pasting.
-
-If the user is asking for modifications to an existing component, apply the changes incrementally and provide the complete updated code.`
+NO explanations. NO descriptions. ONLY the code block above.`
 
     // Format messages for Gemini
     const chatHistory = messages.map((msg: any) => ({
@@ -168,10 +157,80 @@ If the user is asking for modifications to an existing component, apply the chan
       const text = result.response.text()
       console.log('Received response from Gemini, length:', text?.length || 0)
 
-      // Return the formatted response directly
+      // Extract component code from the response
+      const extractComponentCode = (responseText: string) => {
+        // Look for TSX code blocks - try multiple patterns
+        let tsxMatch = responseText.match(/```tsx\n?([\s\S]*?)\n?```/);
+        if (!tsxMatch) {
+          tsxMatch = responseText.match(/```typescript\n?([\s\S]*?)\n?```/);
+        }
+        if (!tsxMatch) {
+          tsxMatch = responseText.match(/```javascript\n?([\s\S]*?)\n?```/);
+        }
+        if (!tsxMatch) {
+          tsxMatch = responseText.match(/```\n?([\s\S]*?)\n?```/);
+        }
+        
+        let tsCode = tsxMatch ? tsxMatch[1].trim() : '';
+        
+        // Clean up the code - remove any explanatory text before/after function
+        if (tsCode) {
+          // Find the function definition and extract only that
+          const functionMatch = tsCode.match(/(function\s+GeneratedComponent[\s\S]*?^})/m);
+          if (functionMatch) {
+            tsCode = functionMatch[1];
+          } else {
+            // Try const arrow function
+            const constMatch = tsCode.match(/(const\s+GeneratedComponent[\s\S]*?^};?)/m);
+            if (constMatch) {
+              tsCode = constMatch[1];
+            }
+          }
+        }
+        
+        // Look for CSS code blocks (optional)
+        const cssMatch = responseText.match(/```css\n?([\s\S]*?)\n?```/);
+        const cssCode = cssMatch ? cssMatch[1].trim() : '';
+        
+        // Extract component name from the TSX code
+        const nameMatch = tsCode.match(/function\s+(\w+)|const\s+(\w+)\s*=/);
+        const componentName = nameMatch ? (nameMatch[1] || nameMatch[2]) : 'GeneratedComponent';
+        
+        // If we found valid TSX code, create a component object
+        if (tsCode && (tsCode.includes('function') || tsCode.includes('const') || tsCode.includes('return'))) {
+          return {
+            name: componentName,
+            tsx: tsCode,
+            css: cssCode,
+            timestamp: new Date(),
+            id: Math.random().toString(36).substr(2, 9)
+          };
+        }
+        
+        // Fallback: if no code blocks found but response looks like raw TSX code
+        if (!tsCode && (responseText.includes('function') || responseText.includes('const'))) {
+          const cleanedResponse = responseText.trim();
+          const nameMatch = cleanedResponse.match(/function\s+(\w+)|const\s+(\w+)\s*=/);
+          const componentName = nameMatch ? (nameMatch[1] || nameMatch[2]) : 'GeneratedComponent';
+          
+          return {
+            name: componentName,
+            tsx: cleanedResponse,
+            css: '',
+            timestamp: new Date(),
+            id: Math.random().toString(36).substr(2, 9)
+          };
+        }
+        
+        return null;
+      };
+
+      const component = extractComponentCode(text);
+      
+      // Return the formatted response with component data
       const response = {
         message: text,
-        component: null, // We're now returning formatted markdown instead of JSON
+        component: component,
       }
 
       // Save the conversation to database (simplified for demo)

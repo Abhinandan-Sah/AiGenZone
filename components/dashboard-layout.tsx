@@ -122,7 +122,14 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                onClick={() => signOut()}
+                onClick={async () => {
+                  try {
+                    await signOut()
+                    toast.success("Signed out successfully!")
+                  } catch (error) {
+                    toast.error("Failed to sign out")
+                  }
+                }}
                 className="hover:bg-destructive/10 text-destructive focus:text-destructive"
               >
                 <LogOut className="mr-2 h-4 w-4" />

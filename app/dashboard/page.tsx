@@ -6,7 +6,10 @@ import { ChatPanel } from "@/components/chat-panel"
 import { CodeEditor } from "@/components/code-editor"
 import { PreviewPanel } from "@/components/preview-panel"
 import { useAppStore } from "@/lib/store"
+import { useAuth } from "@/components/auth-provider"
+import { useRouter } from "next/navigation"
 import { useEffect } from "react"
+import { Loader2 } from "lucide-react"
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -21,12 +24,34 @@ const containerVariants = {
 
 export default function DashboardPage() {
   const { createSession, currentSession } = useAppStore()
+  const { user, loading } = useAuth()
+  const router = useRouter()
 
   useEffect(() => {
-    if (!currentSession) {
+    if (!loading && !user) {
+      router.push("/auth/login")
+      return
+    }
+
+    if (!currentSession && user) {
       createSession("Welcome Session")
     }
-  }, [currentSession, createSession])
+  }, [currentSession, createSession, user, loading, router])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!user) {
+    return null // Will redirect to login
+  }
 
   return (
     <DashboardLayout>

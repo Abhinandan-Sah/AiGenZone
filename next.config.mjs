@@ -9,6 +9,14 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  async rewrites() {
+    return [
+      {
+        source: '/hybridaction/:path*',
+        destination: '/api/blocked',
+      },
+    ]
+  },
 }
 
 export default nextConfig
