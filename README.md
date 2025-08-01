@@ -1,2 +1,2 @@
 This is AiGenZone - An AI Component generator
--> This a assignment project
+-> This a assignment project for the internship
